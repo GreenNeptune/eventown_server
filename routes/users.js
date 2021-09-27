@@ -149,5 +149,25 @@ router.patch("/changeRole/:userId", authToken, authAdminToken, async (req, res) 
 })
 
 
+router.delete("/:userId", authToken, authAdminToken, async (req, res) => {
+  let userId = req.params.userId;
+  try {
+
+    if (userId === req.userData._id) {
+      return res.json({
+        error: { msg: "You can't delete your own user" }
+      });
+    }
+
+    let data = await UserModel.deleteOne({ _id: userId });
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+})
+
+
 
 module.exports = router;
